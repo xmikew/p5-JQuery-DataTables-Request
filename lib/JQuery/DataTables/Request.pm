@@ -1,10 +1,10 @@
 package JQuery::DataTables::Request;
 
-our $VERSION = '0.01';
-
 use 5.012;
 use strict;
 use warnings;
+
+# VERSION
 
 use Carp;
 
@@ -164,7 +164,7 @@ Returns a single column definition of the requested index
 
 sub column {
   my ($self,$idx_arr) = @_;
-  return undef if !defined($idx_arr);
+  return if !defined($idx_arr);
   return $self->_columns->[$idx_arr];
 }
 
@@ -198,7 +198,7 @@ Get all column definitions as a Hashref, with the column index as the key
 
 =cut
 
-sub columns_ref {
+sub columns_hashref {
   my ($self) = @_;
   my %col_hash;
   @col_hash{ 0 .. $#{$self->_columns} } = @{$self->_columns};
@@ -242,7 +242,7 @@ This is just a passthrough to C<< $request->columns( $col_idx ); >>
 
 sub find_columns {
   my ($self, %options) = @_;
-  return undef unless %options;
+  return unless %options;
 
   if (defined($options{by_idx})) {
     return $self->columns($options{by_idx});

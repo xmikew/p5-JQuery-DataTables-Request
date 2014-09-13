@@ -1,3 +1,5 @@
+=pod
+
 =head1 NAME
 
 JQuery::DataTables::Request - represents a DataTables server-side request
@@ -198,3 +200,4 @@ Copyright E<copy> 2014 by Mike Wisener
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+=cut
