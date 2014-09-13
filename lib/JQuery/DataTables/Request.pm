@@ -40,6 +40,16 @@ differently named parameters server-side for processing. This module only provid
 that corresponds to the v1.10 parameters but maps the v1.9 parameters to the corresponding v1.10
 parameters. 
 
+The DataTable parameters are documented at the following locations:
+
+=over
+
+=item L<Version 1.10 server-side parameters|http://www.datatables.net/manual/server-side>
+
+=item L<Version 1.9 server-side parameters|http://legacy.datatables.net/usage/server-side>
+
+=back
+
 Each column parameter is represented as a HashRef like so:
 
  {
@@ -68,8 +78,8 @@ e.g.
 
  $dt_req->order(0)->{dir}
 
-The order and column accessors are indexed the same way as your column parameters so ->column(0)
-returns the column in the dt_params as [columns][0] - order is similar.
+The order and column accessors are indexed the same way as your column parameters so C<< ->column(0) >>
+returns the column in the dt_params as C<[columns][0]> - order is similar.
 
 =head1 METHODS
 
@@ -197,13 +207,13 @@ sub columns_ref {
 
  $request->find_columns( %options )
 
-where %options hash accepts the following parameters:
+where C<%options> hash accepts the following parameters:
 
 =over
 
 =item by_name
 
-by_name accepts a scalar or arrayref of values and returns a an arrayref of
+by_name accepts a scalar or arrayref of values and returns an arrayref of
 column definitions
 
  my \@columns = $request->find_columns( by_name => ['col_name',col_name2] );
@@ -214,15 +224,15 @@ Searchs the columns data and/or name parameter. Example return:
 
  my \@columns = $request->find_columns( by_name => 'something', search_field => 'name' );
 
-Set to either 'name' or 'data' to search those respective fields when
-doing a by_name seach. If no search_field is specified, by_name searches
+Set to either C<name> or C<data> to search those respective fields when
+doing a C<by_name> seach. If no search_field is specified, C<by_name> searches
 that match either field will be returned (i.e. defaults to search both fields)
 
 =item by_idx
 
  my \@columns = $request->find_columns( by_idx => $col_idx )
 
-This is just a passthrough to $request->columns( $col_idx );
+This is just a passthrough to C<< $request->columns( $col_idx ); >>
 
 =back
 
@@ -265,7 +275,7 @@ sub find_columns {
 
 Returns the version of DataTables we need to support based on the parameters sent. 
 v1.9 version of DataTables sends different named parameters than v1.10. Returns a string
-of '1.9' if we think we have a 1.9 request, '1.10' if we think it is a 1.10 request or undef
+of '1.9' if we think we have a 1.9 request, '1.10' if we think it is a 1.10 request or C<undef>
 if we dont' think it is a DataTables request at all.
 
 =cut
@@ -296,7 +306,7 @@ Processes v1.9 parameters, mapping them to 1.10 parameters
 
  $self->_process_v1_9_params( \%client_params )
 
-where \%client_params is a HashRef containing the v1.9 parameters that DataTables
+where C<\%client_params> is a HashRef containing the v1.9 parameters that DataTables
 client library sends the server in server-side mode.
 
 =cut
@@ -367,7 +377,7 @@ sub _process_v1_9_params {
 
  $self->_process_v1_10_params( \%client_params );
 
-where \%client_params is a HashRef containing the v1.10 parameters that DataTables
+where C<\%client_params> is a HashRef containing the v1.10 parameters that DataTables
 client library sends the server in server-side mode.
 
 =cut
@@ -444,11 +454,14 @@ sub _validate_and_convert
 
 =head1 AUTHOR
 
-Mike Wisener - xmikew_cpan_org
+Mike Wisener E<lt>xmikew_cpan_orgE<gt>
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-perl
+Copyright E<copy> 2014 by Mike Wisener
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut
 
