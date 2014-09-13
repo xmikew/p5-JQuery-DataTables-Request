@@ -1,0 +1,13 @@
+Changes
+lib/JQuery/DataTables/Request.pm
+Makefile.PL
+MANIFEST			This list of files
+README
+README.md
+t/00-load.t
+t/01-new.t
+t/03-columns.t
+t/lib/TestData.pm
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
