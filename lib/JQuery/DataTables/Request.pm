@@ -78,8 +78,10 @@ e.g.
 
  $dt_req->order(0)->{dir}
 
-The order and column accessors are indexed the same way as your column parameters so C<< ->column(0) >>
-returns the column in the dt_params as C<[columns][0]> - order is similar.
+The order and column accessors are indexed the same way as your column parameters so 
+C<< $req->column(0) >> returns the column in the client_params C<[columns][0]> column.  
+
+C<order> is similar in that C<< $req->order(0) >> returns the C<order[0]> parameter data.
 
 =head1 METHODS
 
@@ -216,9 +218,9 @@ where C<%options> hash accepts the following parameters:
 by_name accepts a scalar or arrayref of values and returns an arrayref of
 column definitions
 
- my \@columns = $request->find_columns( by_name => ['col_name',col_name2] );
+ my \@columns = $request->find_columns( by_name => ['col_name','col_name2'] );
 
-Searchs the columns data and/or name parameter. Example return:
+Searchs the columns C<data> and/or C<name> parameter. 
 
 =item search_field
 
