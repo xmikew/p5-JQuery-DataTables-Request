@@ -177,9 +177,12 @@ Validates parameters are set properly and does boolean conversion
 
 =head1 AUTHOR
 
-Mike Wisener - xmikew_cpan_org
+Mike Wisener E<lt>xmikew_cpan_orgE<gt>
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-perl
+Copyright (C) 2014 by Mike Wisener
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 

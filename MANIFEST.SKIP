@@ -2,7 +2,6 @@
 \B\.git\b
 # Makemaker generated files and dirs.
 ^MANIFEST\.
-README.pod
 ^Makefile$
 ^blib/
 MakeMaker-\d
