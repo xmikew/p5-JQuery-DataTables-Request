@@ -11,7 +11,7 @@ my $req = JQuery::DataTables::Request->new( client_params => $CLIENT_PARAMS1 );
 isa_ok( $req, 'JQuery::DataTables::Request' );
 
 ok( $req->find_columns( by_name => 'col_name' ), 'find_columns by_name works' );
-ok( $req->find_columns( by_name => 'col_data', 'name_field' => 'data' ), 'find_columns name_field works' );
+ok( $req->find_columns( by_name => 'col_name', 'name_field' => 'data' ), 'find_columns name_field works' );
 ok( $req->find_columns( by_idx => 0 ), 'find_columns by_idx works' );
 ok( $req->column(0), 'column method index lookup works' );
 ok( $req->column(0)->{orderable}, 'column method index lookup works 2' );

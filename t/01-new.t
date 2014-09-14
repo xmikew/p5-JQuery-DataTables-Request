@@ -9,7 +9,7 @@ use TestData qw($CLIENT_PARAMS1 $CLIENT_PARAMS_1_9 $CLIENT_PARAMS2);
 use JQuery::DataTables::Request;
 
 {
-  foreach my $client_params ( ($CLIENT_PARAMS1, $CLIENT_PARAMS_1_9) ) {
+  foreach my $client_params ( ($CLIENT_PARAMS_1_9) ) {
     my $req = JQuery::DataTables::Request->new( client_params => $client_params );
     isa_ok( $req, 'JQuery::DataTables::Request' );
 
@@ -24,18 +24,13 @@ use JQuery::DataTables::Request;
     ok($req->order(0)->{dir} eq 'asc', 'constructor set proper column order direction');
 
     # column
-    #
-    if ( $client_params == $CLIENT_PARAMS1 ) {  # no name column on v1.9
-      ok($req->column(0)->{name} eq 'col_name', 'column accessor works');
-    }
+    ok($req->column(0)->{name} eq 'col_name', 'column name accessor works');
+    ok($req->column(0)->{data} eq 'col_name', 'column data accessor works');
 
     # columns
     ok(defined($req->columns->[0]), 'constructor created column entry');
-
-    if ( $client_params == $CLIENT_PARAMS1 ) { # no name parameter on v1.9
-      ok($req->columns->[0]{name} eq 'col_name', 'constructor set column name entry');
-    }
-    ok($req->columns->[0]{data} eq 'col_data', 'constructor set column data entry');
+    ok($req->columns->[0]{name} eq 'col_name', 'constructor set column name entry');
+    ok($req->columns->[0]{data} eq 'col_name', 'constructor set column data entry');
     ok(!$req->columns->[0]{search}{regex}, 'constructor converted to perl boolean'); 
 
     # search

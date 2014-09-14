@@ -408,6 +408,12 @@ sub _process_v1_9_params {
           $columns->{$idx}{$sub_param1}{$sub_param2} = $new_val;
         } else {
           $columns->{$idx}{$sub_param1} = $new_val;
+          # copy name => data for v1.9 so that find_columns works as expected
+          # not really sure how to do this, Data::Alias? alias it eventually
+          # right now just copy
+          if ($sub_param1 eq 'data') {
+            $columns->{$idx}{'name'} = $new_val;
+          }
         }
       } elsif ($map->[0] eq 'order') {
         $order->{$idx}{$sub_param1} = $new_val;
