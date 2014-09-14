@@ -157,14 +157,29 @@ This is just a passthrough to C<< $request->columns( $col_idx ); >>
 
 =back
 
-=head2 datatables_request_version
+=head2 order
 
- my $version = $request->datatables_request_version( \%client_params )
+ $req->order(0)->{dir}
+
+Returns the order data at provided index.
+
+=head2 orders
+
+ $req->orders([0,1]);
+
+Returns an arrayref of the order data records at the provided indexes. Accepts an arrayref or scalar.
+C<< ->orders([0,1]) >> will get C<orders[0]> and C<orders[1]> data.
+
+=head2 version
+
+ my $version = $request->version( \%client_params? )
 
 Returns the version of DataTables we need to support based on the parameters sent. 
 v1.9 version of DataTables sends different named parameters than v1.10. Returns a string
 of '1.9' if we think we have a 1.9 request, '1.10' if we think it is a 1.10 request or C<undef>
-if we dont' think it is a DataTables request at all.
+if we dont' think it is a DataTables request at all. 
+
+This can be invoked as a class method as well as an instance method.
 
 =head1 PRIVATE METHODS
 
