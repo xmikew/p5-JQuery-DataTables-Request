@@ -93,7 +93,8 @@ __PACKAGE__->mk_accessors(qw(
     start
     length
     search
-    order
+    _version
+    _order
     _columns
   )
 );
@@ -143,14 +144,15 @@ sub new {
 
   my $obj = bless {}, __PACKAGE__;
 
-  my $version = $obj->datatables_request_version( $options{client_params} );
-  if ($version eq '1.10') {
+  my $version = $obj->version( $options{client_params} );
+  if (defined $version && $version eq '1.10') {
     $obj->_process_v1_10_params( $options{'client_params'} );
- } elsif ($version eq '1.9') {
+  } elsif (defined $version && $version eq '1.9') {
     $obj->_process_v1_9_params( $options{'client_params'} );
   } else {
     confess 'client_params provided do not contain DataTables server-side parameters (i.e. this is not DataTables request data)';
   }
+  $obj->_version( $version );
   return $obj;
 }
 
@@ -271,32 +273,81 @@ sub find_columns {
   }
 }
 
-=head2 datatables_request_version
+=head2 order
 
- my $version = $request->datatables_request_version( \%client_params )
+ $req->order(0)->{dir}
+
+Returns the order data at provided index.
+
+=cut
+
+sub order
+{
+  my ($self,$idx) = @_;
+  return unless defined($idx);
+  return $self->_order->[$idx];
+}
+
+=head2 orders
+
+ $req->orders([0,1]);
+
+Returns an arrayref of the order data records at the provided indexes. Accepts an arrayref or scalar.
+C<< ->orders([0,1]) >> will get C<orders[0]> and C<orders[1]> data.
+
+=cut
+
+sub orders
+{
+  my ($self,$ar_idx) = @_;
+  my $ord_ref = $self->_order;
+  return $ord_ref unless defined($ar_idx);
+
+  $ar_idx = [ $ar_idx ] unless ref($ar_idx) eq 'ARRAY';
+
+  my $ret_arr;
+  foreach my $idx ( @$ar_idx ) {
+    push(@$ret_arr, $ord_ref->[$idx]);
+  }
+
+  return $ret_arr;
+}
+
+=head2 version
+
+ my $version = $request->version( \%client_params? )
 
 Returns the version of DataTables we need to support based on the parameters sent. 
 v1.9 version of DataTables sends different named parameters than v1.10. Returns a string
 of '1.9' if we think we have a 1.9 request, '1.10' if we think it is a 1.10 request or C<undef>
-if we dont' think it is a DataTables request at all.
+if we dont' think it is a DataTables request at all. 
+
+This can be invoked as a class method as well as an instance method.
 
 =cut
 
-sub datatables_request_version
+sub version
 {
   my ($self,$client_params) = @_;
 
+  if (!ref($self) && !defined($client_params)) {
+    return;
+  }
+
+  return $self->_version unless $client_params;
   my $ref = $client_params;
+
   # v1.10 parameters
-  return '1.10'
-    if (defined $ref->{draw} && defined $ref->{start} && defined $ref->{'length'});
+  if (defined $ref->{draw} && defined $ref->{start} && defined $ref->{'length'}) {
+    return '1.10';
+  }
 
   # v1.9 parameters
-  return '1.9'
-    if (defined $ref->{sEcho} && defined $ref->{iDisplayStart} && defined $ref->{iDisplayLength});
+  if (defined $ref->{sEcho} && defined $ref->{iDisplayStart} && defined $ref->{iDisplayLength}) {
+    return '1.9';
+  }
 
-  return 0;
-  
+  return;
 }
 
 =head1 PRIVATE METHODS
@@ -350,7 +401,7 @@ sub _process_v1_9_params {
     } elsif ($name =~ m/^(?<param>bSearchable|sSearch|bRegex|bSortable|iSortCol|sSortDir|mDataProp)_(?<idx>\d+)$/) {
       my $map = $vmap->{col_and_order}->{$+{param}};
       my ($param,$idx,$sub_param1,$sub_param2,$new_val) = 
-        $self->_validate_and_convert( $+{param}, $+{idx}, $map->[1], $map->[2], $val);
+        $self->_validate_and_convert( $map->[0], $+{idx}, $map->[1], $map->[2], $val);
 
       if ($map->[0] eq 'columns') {
         if (defined($sub_param2)) {
@@ -370,8 +421,8 @@ sub _process_v1_9_params {
   my @order_arr;
   push(@order_arr, $order->{$_}) for ( sort keys %$order );
 
-  $self->columns( \@col_arr );
-  $self->order( \@order_arr );
+  $self->_columns( \@col_arr );
+  $self->_order( \@order_arr );
   $self->search( $search );
 }
 
@@ -423,7 +474,7 @@ sub _process_v1_10_params {
   push(@order_arr, $order->{$_}) for ( sort keys %$order );
 
   $self->_columns( \@col_arr );
-  $self->order( \@order_arr );
+  $self->_order( \@order_arr );
   $self->search( $search );
   return $self;
 }
@@ -445,7 +496,6 @@ sub _validate_and_convert
       $val = lc $val eq 'true' ? 1 : 0;
     }
   } elsif ($param eq 'order') {
-
     if ($sub1 eq 'dir' && lc $val ne 'asc' && lc $val ne 'desc') {
       #warn 'Unknown order[dir] value provided. Must be asc or desc, defaulting to asc';
       $val = 'asc';

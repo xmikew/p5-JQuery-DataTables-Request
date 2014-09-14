@@ -18,4 +18,6 @@ ok( $req->column(0)->{orderable}, 'column method index lookup works 2' );
 ok( @{ $req->columns([0,1]) } == 2, 'columns index by arrayref works' );
 ok( !defined ($req->columns([0,1])->[1]), 'non-existent column requested returns undef' );
 
+ok( $req->columns_hashref->{0}->{name} eq 'col_name', 'columns_hashref returns hashref' );
+
 done_testing;
